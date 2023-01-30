@@ -1,20 +1,28 @@
-# Frogger
+FROG GAME
 
-### Gameplay
+° Jogabilidade
 
-The goal of the game is to direct a frog from the botton of the screen to the top of the scree by crossing a busy road and navigating a river. The frog has three lives at the begining of the game. The player must achieve the goal before the score is deducted to zero.
+O objetivo do jogo é direcionar o sapo que está em cima
+do botão até o topo da tela atravessando uma estrada 
+movimentada e um rio sem obstáculos. O sapo tem 3 (três)
+vidas. O jogador deve alcançar o objetivo antes do número
+de vidas chegar a zero.
 
-Ways to lose a frog life:
-1. Being hit by or running into a road vehicle
-2. Jumping into the river's water
-3. Running off the side of the screen
 
-### Scoring
+° Como perder vida no jogo 
 
-The game starts with a score of 500 points. Score will be deducted at the rate of 5 points/second, and when a frog life loses, 100 points will be deducted from the score. 
+Existem três diferentes maneiras de você perder vida no jogo. 
+Uma delas é caso seja acertado ou bater em um dos carros.
+Outra maneira é pular dentro do rio. E por fim, levar o sapo para fora tela.
 
-### How to start the program:
 
-Download the Frogger folder, start the program from your terminal `$ racket Frogger.rkt` or open the program file with DrRacket and click **Run**.
+° Pontuação 
 
-[Demonstration Video](https://youtu.be/H45emYuoKAk)
+Você começa o jogo com 500 pontos. Os pontos vão caindo de 5 em 5 a cada segundo
+e a cada vida perdida são 100 pontos a menos.
+
+
+° Como iniciar o programa 
+
+Instale a pasta do FROG GAME, inicie o programa no terminal
+ou abra o arquivo de programa com DrRacket e cllique em "Run"(rodar/correr)
