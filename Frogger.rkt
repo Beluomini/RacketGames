@@ -172,9 +172,9 @@
 ;;; [Lista-de-troncos]
 
 ;; Exemplos
-(define lotr0 '())
-(define lotr1 (list tr1 tr2 tr3 tr4 tr5 tr6 tr7 tr8 tr9 tr10 tr11 tr12))
-(define lotr2 (list tr1))
+(define ldtr0 '())
+(define ldtr1 (list tr1 tr2 tr3 tr4 tr5 tr6 tr7 tr8 tr9 tr10 tr11 tr12))
+(define ldtr2 (list tr1))
 
 
 ;;; definicao de tartaruga
@@ -209,7 +209,7 @@
 (define ldt0 '())
 (define ldt1 (list t1 t2 t3 t4 t5 t6 t7 t8 t9 t10
                    t11 t12 t13 t14 t15 t16 t17 t18))
-(define lot2 (list t1))
+(define ldt2 (list t1))
 
 
 ;;; Definicao de informações
@@ -220,35 +220,35 @@
 (define info0 (make-info PONTUACAO-INICIAL VIDAS-INICIAIS))
 
 
-;;; Definition of World
-;;; A World is a
-;; (make-world jogador [List-of carro] [List-of tronco] [List-of tartarugas])
-(define-struct world (jogador carros troncos tartarugas info))
+;;; Definition of mundo
+;;; A mundo is a
+;; (make-mundo jogador [List-of carro] [List-of tronco] [List-of tartarugas])
+(define-struct mundo (jogador carros troncos tartarugas info))
 
 ;; Exemplos:
-(define MUNDO-VAZIO (make-world jogador0 ldc0 lotr0 ldt0 info0))
-(define MUNDO0 (make-world jogador0 ldc1 lotr1 ldt1 info0))
-(define MUNDO-S (make-world jogador0 ldc2 lotr2 lot2 info0))
+(define MUNDO-VAZIO (make-mundo jogador0 ldc0 ldtr0 ldt0 info0))
+(define MUNDO0 (make-mundo jogador0 ldc1 ldtr1 ldt1 info0))
+(define MUNDO-S (make-mundo jogador0 ldc2 ldtr2 ldt2 info0))
 
 
 
 ;;;; ---------------------------------------------------------------------------
-;;;; FUNCTIONS:
+;;;; FUNÇÕES
 
-;;; Drawing the world
+;;; Desenhando o mundo
 
-;; draw-all: World -> Image
-;; draw the world base on condition
-(define (draw-all aw)
-  (if (dead? aw) (draw-world (reset-world aw)) (draw-world aw)))
+;; apresenta-tudo: mundo -> Image
+;; apresenta the mundo base on condition
+(define (apresenta-tudo aw)
+  (if (morto? aw) (apresenta-mundo (reset-mundo aw)) (apresenta-mundo aw)))
 
-;; draw-world: World -> Image
-;; draw the current world
-(check-expect (draw-world MUNDO-VAZIO)
+;; apresenta-mundo: mundo -> Image
+;; apresenta the current mundo
+(check-expect (apresenta-mundo MUNDO-VAZIO)
               (place-image F-IMG-U 370 630
                            (place-image (text "Score: 500" 20 'green) 80 680
                                         (place-image (text "Lives: 3" 20 'green) 200 680 BG))))
-(check-expect (draw-world MUNDO-S)
+(check-expect (apresenta-mundo MUNDO-S)
               (place-image F-IMG-U 370 630
                            (place-image C-IMG-R 80 580
                                         (place-image TR-IMG -20 280
@@ -256,97 +256,97 @@
                                                                   (place-image (text "Score: 500" 20 'green) 80 680
                                                                                (place-image (text "Lives: 3" 20 'green) 200 680    
                                                                                             BG)))))))
-(define (draw-world aw)
-  (draw-jogador (world-jogador aw)
-               (draw-carros (world-carros aw)
-                              (draw-troncos (world-troncos aw)
-                                           (draw-tartarugas (world-tartarugas aw)
-                                                         (draw-score (info-score (world-info aw))
-                                                                     (draw-lives (info-lives (world-info aw))
+(define (apresenta-mundo aw)
+  (apresenta-jogador (mundo-jogador aw)
+               (apresenta-carros (mundo-carros aw)
+                              (apresenta-troncos (mundo-troncos aw)
+                                           (apresenta-tartarugas (mundo-tartarugas aw)
+                                                         (apresenta-score (info-score (mundo-info aw))
+                                                                     (apresenta-lives (info-lives (mundo-info aw))
                                                                                  BG)))))))
 
-;; draw-jogador: jogador Image -> Image
-;; draw the image of a frog on another image based on the frog's direction
-(check-expect (draw-jogador jogador0 BG) (place-image F-IMG-U 370 630 BG))
-(check-expect (draw-jogador jogador1 BG) (place-image F-IMG-D 370 630 BG))
-(check-expect (draw-jogador jogador2 BG) (place-image F-IMG-L 370 630 BG))
-(check-expect (draw-jogador jogador3 BG) (place-image F-IMG-R 370 630 BG))
-(define (draw-jogador ap img)
+;; apresenta-jogador: jogador Image -> Image
+;; apresenta a imagem do sapo baseado na sua direção
+(check-expect (apresenta-jogador jogador0 BG) (place-image F-IMG-U 370 630 BG))
+(check-expect (apresenta-jogador jogador1 BG) (place-image F-IMG-D 370 630 BG))
+(check-expect (apresenta-jogador jogador2 BG) (place-image F-IMG-L 370 630 BG))
+(check-expect (apresenta-jogador jogador3 BG) (place-image F-IMG-R 370 630 BG))
+(define (apresenta-jogador ap img)
   (cond [(string=? (jogador-dir ap) "up")
-         (draw (jogador-x ap) (jogador-y ap) F-IMG-U img)]
+         (apresenta (jogador-x ap) (jogador-y ap) F-IMG-U img)]
         [(string=? (jogador-dir ap) "down")
-         (draw (jogador-x ap) (jogador-y ap) F-IMG-D img)]
+         (apresenta (jogador-x ap) (jogador-y ap) F-IMG-D img)]
         [(string=? (jogador-dir ap) "left")
-         (draw (jogador-x ap) (jogador-y ap) F-IMG-L img)]
+         (apresenta (jogador-x ap) (jogador-y ap) F-IMG-L img)]
         [(string=? (jogador-dir ap) "right")
-         (draw (jogador-x ap) (jogador-y ap) F-IMG-R img)]))
+         (apresenta (jogador-x ap) (jogador-y ap) F-IMG-R img)]))
 
-;; draw: Number Number Image Image -> Image
-;; draw image1 on image2
-(check-expect (draw 1 1 F-IMG-U BG) (place-image F-IMG-U 10 10 BG))
-(define (draw x y img1 img2)
+;; apresenta: Number Number Image Image -> Image
+;; apresenta image1 acima da image2
+(check-expect (apresenta 1 1 F-IMG-U BG) (place-image F-IMG-U 10 10 BG))
+(define (apresenta x y img1 img2)
   (place-image img1 (* LARGURA-TELA x) (* LARGURA-TELA y) img2))
 
-;; draw-carros: [List-of carro] Image -> Image
-;; draw the given set of carros on an image
-(check-expect (draw-carros ldc0 BG) BG)
-(check-expect (draw-carros ldc2 BG) (place-image C-IMG-R 80 580 BG))
-(define (draw-carros alov img)
+;; apresenta-carros: [List-of carro] Image -> Image
+;; apresenta o grupo de carros baseado na sua direção 
+(check-expect (apresenta-carros ldc0 BG) BG)
+(check-expect (apresenta-carros ldc2 BG) (place-image C-IMG-R 80 580 BG))
+(define (apresenta-carros alov img)
   ;; [carro Image -> Image] Image [List-of carro] -> Image
-  (foldr draw-one-v img alov))
+  (foldr apresenta-um-v img alov))
 
-;; draw-one-v: carro Image -> Image
-;; draw the image of the given carro on another image
-(check-expect (draw-one-v c1 BG) (place-image C-IMG-R 80 580 BG))
-(check-expect (draw-one-v c5 BG) (place-image C-IMG-L 60 530 BG))
-(define (draw-one-v av img)
+;; apresenta-um-v: carro Image -> Image
+;; apresenta the image of the given carro on another image
+(check-expect (apresenta-um-v c1 BG) (place-image C-IMG-R 80 580 BG))
+(check-expect (apresenta-um-v c5 BG) (place-image C-IMG-L 60 530 BG))
+(define (apresenta-um-v av img)
   (cond [(string=? (carro-dir av) "left")
-         (draw (carro-x av) (carro-y av) C-IMG-L img)]
+         (apresenta (carro-x av) (carro-y av) C-IMG-L img)]
         [(string=? (carro-dir av) "right")
-         (draw (carro-x av) (carro-y av) C-IMG-R img)]))
+         (apresenta (carro-x av) (carro-y av) C-IMG-R img)]))
 
-;; draw-troncos: [List-of tronco] Image -> Image
-;; draw the given set of troncos on an image
-(check-expect (draw-troncos lotr0 BG) BG)
-(check-expect (draw-troncos lotr2 BG) (place-image TR-IMG -20 280 BG))
-(define (draw-troncos alop img)
+;; apresenta-troncos: [List-of tronco] Image -> Image
+;; apresenta the given set of troncos on an image
+(check-expect (apresenta-troncos ldtr0 BG) BG)
+(check-expect (apresenta-troncos ldtr2 BG) (place-image TR-IMG -20 280 BG))
+(define (apresenta-troncos alop img)
   ;; [tronco Image -> Image] Image [List-of tronco] -> Image
-  (foldr (λ (p i) (draw (tronco-x p) (tronco-y p) TR-IMG i)) img alop))
+  (foldr (λ (p i) (apresenta (tronco-x p) (tronco-y p) TR-IMG i)) img alop))
 
-;; draw-tartarugas: [List-of tartaruga] Image -> Image
-;; draw the given set of tartarugas on an image
-(check-expect (draw-tartarugas ldt0 BG) BG)
-(check-expect (draw-tartarugas lot2 BG) (place-image T-IMG 20 230 BG))
-(define (draw-tartarugas alot img)
+;; apresenta-tartarugas: [List-of tartaruga] Image -> Image
+;; apresenta the given set of tartarugas on an image
+(check-expect (apresenta-tartarugas ldt0 BG) BG)
+(check-expect (apresenta-tartarugas ldt2 BG) (place-image T-IMG 20 230 BG))
+(define (apresenta-tartarugas alot img)
   ;; [tartaruga Image -> Image] Image [List-of tartaruga] -> Image
-  (foldr (λ (t i) (draw (tartaruga-x t) (tartaruga-y t) T-IMG i)) img alot))
+  (foldr (λ (t i) (apresenta (tartaruga-x t) (tartaruga-y t) T-IMG i)) img alot))
 
-;; draw-info: Info Image -> Image
-;; draw the game information on an image
-(check-expect (draw-info info0 BG)
+;; apresenta-info: Info Image -> Image
+;; apresenta the game information on an image
+(check-expect (apresenta-info info0 BG)
               (place-image (text "Score: 500" 20 'green) 80 680
                            (place-image (text "Lives: 3" 20 'green) 200 680
                                         BG)))
-(define (draw-info i img)
-  (draw-score (info-score i)
-              (draw-lives (info-lives i) img)))                   
+(define (apresenta-info i img)
+  (apresenta-score (info-score i)
+              (apresenta-lives (info-lives i) img)))                   
 
-;; draw-score: Number Image -> Image
+;; apresenta-score: Number Image -> Image
 ;; produce the game score as an image
-(check-expect (draw-score 1000 BG)
+(check-expect (apresenta-score 1000 BG)
               (place-image (text "Score: 1000" 20 'green) 80 680 BG))
-(define (draw-score score img)
-  (draw PONTUACAO-INICIAL-X INFO-Y
+(define (apresenta-score score img)
+  (apresenta PONTUACAO-INICIAL-X INFO-Y
         (text (string-append "Score: " (number->string score))
               TAMANHO-FONTE-INFO 'green)
         img))
 
-;; draw-lives: Number Image -> Image
+;; apresenta-lives: Number Image -> Image
 ;; produce the currentn number of lives as an image
-(check-expect (draw-lives 3 BG)
+(check-expect (apresenta-lives 3 BG)
               (place-image (text "Lives: 3" 20 'green) 200 680 BG))
-(define (draw-lives lives img)
-  (draw VIDAS-INICIAIS-X INFO-Y
+(define (apresenta-lives lives img)
+  (apresenta VIDAS-INICIAIS-X INFO-Y
         (text (string-append "Lives: " (number->string lives))
               TAMANHO-FONTE-INFO 'green)
         img))
@@ -355,30 +355,30 @@
 
 ;;; Moving
 
-;; move-all: World -> World
-;; move the world base on condition
+;; move-all: mundo -> mundo
+;; move the mundo base on condition
 (define (move-all aw)
-  (if (dead? aw) (move-world (reset-world aw)) (move-world aw)))
+  (if (morto? aw) (move-mundo (reset-mundo aw)) (move-mundo aw)))
 
-;; move-world: World -> World
-;; move the given world at each tick
-(check-expect (move-world MUNDO-VAZIO)
-              (make-world jogador0 ldc0 lotr0 ldt0 (make-info 499 3)))
-(check-expect (move-world MUNDO-S)
-              (make-world jogador0
+;; move-mundo: mundo -> mundo
+;; move the given mundo at each tick
+(check-expect (move-mundo MUNDO-VAZIO)
+              (make-mundo jogador0 ldc0 ldtr0 ldt0 (make-info 499 3)))
+(check-expect (move-mundo MUNDO-S)
+              (make-mundo jogador0
                           (list (make-carro 9 58 "right"))
                           (list (make-tronco -1 28 "right"))
                           (list (make-tartaruga 1 23 "left"))
                           (make-info 499 3)))
-(define (move-world aw)
-  (make-world (ride-move (world-jogador aw)
-                         (world-troncos aw)
-                         (world-tartarugas aw))
-              (move-carros (world-carros aw))
-              (move-troncos (world-troncos aw))
-              (move-tartarugas (world-tartarugas aw))
-              (make-info (change-score (info-score (world-info aw)))
-                         (info-lives (world-info aw)))))
+(define (move-mundo aw)
+  (make-mundo (ride-move (mundo-jogador aw)
+                         (mundo-troncos aw)
+                         (mundo-tartarugas aw))
+              (move-carros (mundo-carros aw))
+              (move-troncos (mundo-troncos aw))
+              (move-tartarugas (mundo-tartarugas aw))
+              (make-info (change-score (info-score (mundo-info aw)))
+                         (info-lives (mundo-info aw)))))
 
 ;; move-carros: [List-of carro] -> [List-of carro]
 ;; move the given list of carros at each tick
@@ -434,7 +434,7 @@
 ;;> and not very helpful.
 
 ;; move-troncos: [List-of tronco] -> [List-of tronco]
-(check-expect (move-troncos lotr2) (list (make-tronco -1 28 "right")))
+(check-expect (move-troncos ldtr2) (list (make-tronco -1 28 "right")))
 (check-expect (move-troncos (list (make-tronco 80 28 "right")))
               (list (make-tronco -7 28 "right")))
 (define (move-troncos alop)
@@ -443,7 +443,7 @@
                           (tronco-y p) (tronco-dir p))) alop))
 
 ;; move-tartarugas: [List-of tartaruga] -> [List-of tartaruga]
-(check-expect (move-tartarugas lot2) (list (make-tartaruga 1 23 "left")))
+(check-expect (move-tartarugas ldt2) (list (make-tartaruga 1 23 "left")))
 (check-expect (move-tartarugas (list (make-tartaruga -2 23 "left")))
               (list (make-tartaruga 81 23 "left")))
 (define (move-tartarugas alot)
@@ -453,10 +453,10 @@
 
 ;; ride-move: jogador [List-of tronco] [List-of tartarugas] -> tronco
 ;; move the frg if it rides on a tronco or a tartaruga
-(check-expect (ride-move jogador0 lotr2 lot2) jogador0)
-(check-expect (ride-move (make-jogador -2 28 "up") lotr2 lot2)
+(check-expect (ride-move jogador0 ldtr2 ldt2) jogador0)
+(check-expect (ride-move (make-jogador -2 28 "up") ldtr2 ldt2)
               (make-jogador -1 28 "up"))
-(check-expect (ride-move (make-jogador 2 23 "up") lotr2 lot2)
+(check-expect (ride-move (make-jogador 2 23 "up") ldtr2 ldt2)
               (make-jogador 1 23 "up"))
 (define (ride-move ap alop alot)
   (cond [(on-any-p? ap alop)
@@ -470,8 +470,8 @@
 ;; on-any-p?: jogador [List-of tronco] -> Boolean
 ;; is the jogador on any tronco?
 ;; (is the center of jogador within any tronco image?)
-(check-expect (on-any-p? jogador0 lotr2) #false)
-(check-expect (on-any-p? (make-jogador -2 28 "up") lotr2) #true)
+(check-expect (on-any-p? jogador0 ldtr2) #false)
+(check-expect (on-any-p? (make-jogador -2 28 "up") ldtr2) #true)
 (define (on-any-p? ap alop)
   ;; [tronco -> Boolean] [List-of tronco] -> [List-of tronco]
   (ormap (λ (p) (on? ap (tronco-x p) (tronco-y p) TR-LARGURA TR-ALTURA)) alop))
@@ -479,8 +479,8 @@
 ;; on-any-t?: jogador [List-of tartaruga] -> Boolean
 ;; is the jogador on any tartaruga?
 ;; (is the center of jogador within any tartaruga image?)
-(check-expect (on-any-t? jogador0 lot2) #false)
-(check-expect (on-any-t? (make-jogador 2 23 "up") lot2) #true)
+(check-expect (on-any-t? jogador0 ldt2) #false)
+(check-expect (on-any-t? (make-jogador 2 23 "up") ldt2) #true)
 (define (on-any-t? ap alot)
   ;; [tartaruga -> Boolean] [List-of tartaruga] -> [List-of tartaruga]
   (ormap (λ (t) (on? ap (tartaruga-x t) (tartaruga-y t) T-L T-L)) alot))
@@ -502,7 +502,7 @@
        (> n1 (- n2 range))))
 
 ;; change-score: Score -> Score
-;; deduct one from score on each tick
+;; deduct um from score on each tick
 (check-expect (change-score PONTUACAO-INICIAL) 499)
 (define (change-score score)
   (- score 1))
@@ -511,22 +511,22 @@
 
 ;;; Key-handler
 
-;; move-world-jogador: World Direction -> World
-;; change the position of the jogador in the given world when a key is pressed
-(check-expect (move-world-jogador MUNDO0 "up")
-              (make-world (make-jogador 37 58 "up") ldc1 lotr1 ldt1 info0))
-(check-expect (move-world-jogador MUNDO0 "down")
-              (make-world (make-jogador 37 68 "down") ldc1 lotr1 ldt1 info0))
-(check-expect (move-world-jogador MUNDO0 "left")
-              (make-world (make-jogador 32 63 "left") ldc1 lotr1 ldt1 info0))
-(check-expect (move-world-jogador MUNDO0 "right")
-              (make-world (make-jogador 42 63 "right") ldc1 lotr1 ldt1 info0))
-(define (move-world-jogador aw adir)
-  (make-world (move-jogador (world-jogador aw) adir)
-              (world-carros aw)
-              (world-troncos aw)
-              (world-tartarugas aw)
-              (world-info aw)))
+;; move-mundo-jogador: mundo Direction -> mundo
+;; change the position of the jogador in the given mundo when a key is pressed
+(check-expect (move-mundo-jogador MUNDO0 "up")
+              (make-mundo (make-jogador 37 58 "up") ldc1 ldtr1 ldt1 info0))
+(check-expect (move-mundo-jogador MUNDO0 "down")
+              (make-mundo (make-jogador 37 68 "down") ldc1 ldtr1 ldt1 info0))
+(check-expect (move-mundo-jogador MUNDO0 "left")
+              (make-mundo (make-jogador 32 63 "left") ldc1 ldtr1 ldt1 info0))
+(check-expect (move-mundo-jogador MUNDO0 "right")
+              (make-mundo (make-jogador 42 63 "right") ldc1 ldtr1 ldt1 info0))
+(define (move-mundo-jogador aw adir)
+  (make-mundo (move-jogador (mundo-jogador aw) adir)
+              (mundo-carros aw)
+              (mundo-troncos aw)
+              (mundo-tartarugas aw)
+              (mundo-info aw)))
 
 ;; move-jogador: jogador Direction -> jogador
 ;; change the position of the given jogador when a key is pressed
@@ -545,7 +545,7 @@
          (make-jogador (+ (jogador-x ap) FROG-PASSO) (jogador-y ap) adir)]))
 
 ;; above-bottom: Number -> Number
-;; add one step (5 grids) to y if it remains above the bottom of the screen,
+;; add um step (5 grids) to y if it remains above the bottom of the screen,
 ;; otherwise keep y
 (check-expect (above-bottom 10) 15)
 (check-expect (above-bottom 68) 68)
@@ -558,42 +558,42 @@
 
 ;;; Status detection
 
-;; end?: World -> Boolean
+;; end?: mundo -> Boolean
 ;; does the game over?
 (check-expect (end? MUNDO0) #false)
-(check-expect (end? (make-world jogador0 ldc1 lotr1 ldt1 (make-info 1000 0)))
+(check-expect (end? (make-mundo jogador0 ldc1 ldtr1 ldt1 (make-info 1000 0)))
               #true)
-(check-expect (end? (make-world jogador0 ldc1 lotr1 ldt1 (make-info 0 1)))
+(check-expect (end? (make-mundo jogador0 ldc1 ldtr1 ldt1 (make-info 0 1)))
               #true)
 (define (end? aw)
-  (or (<= (info-lives (world-info aw)) 0)
-      (<= (info-score (world-info aw)) 0)
-      (win? (world-jogador aw))))
+  (or (<= (info-lives (mundo-info aw)) 0)
+      (<= (info-score (mundo-info aw)) 0)
+      (win? (mundo-jogador aw))))
 
-;; reset-world: World -> World
-(check-expect (reset-world MUNDO0)
-              (make-world jogador0 ldc1 lotr1 ldt1 (make-info 400 2)))
-(define (reset-world aw)
-  (make-world jogador0 ldc1 lotr1 ldt1
-              (make-info (- (info-score (world-info aw)) 100)
-                         (- (info-lives (world-info aw)) 1))))
+;; reset-mundo: mundo -> mundo
+(check-expect (reset-mundo MUNDO0)
+              (make-mundo jogador0 ldc1 ldtr1 ldt1 (make-info 400 2)))
+(define (reset-mundo aw)
+  (make-mundo jogador0 ldc1 ldtr1 ldt1
+              (make-info (- (info-score (mundo-info aw)) 100)
+                         (- (info-lives (mundo-info aw)) 1))))
 
-;; dead?: World -> Boolean
-;; does current jogador dead?
-(check-expect (dead? (make-world (make-jogador 4 58 "up") ldc1 lotr1 ldt1 info0))
+;; morto?: mundo -> Boolean
+;; does current jogador morto?
+(check-expect (morto? (make-mundo (make-jogador 4 58 "up") ldc1 ldtr1 ldt1 info0))
               #true)
-(check-expect (dead? (make-world (make-jogador 31 28 "up") ldc1 lotr1 ldt1 info0))
+(check-expect (morto? (make-mundo (make-jogador 31 28 "up") ldc1 ldtr1 ldt1 info0))
               #true)
-(check-expect (dead? (make-world (make-jogador 0 28 "up") ldc1 lotr1 ldt1 info0))
+(check-expect (morto? (make-mundo (make-jogador 0 28 "up") ldc1 ldtr1 ldt1 info0))
               #true)
-(check-expect (dead? (make-world jogador0 ldc1 lotr1 ldt1 (make-info 0 3)))
+(check-expect (morto? (make-mundo jogador0 ldc1 ldtr1 ldt1 (make-info 0 3)))
               #true)
-(check-expect (dead? MUNDO0) #false)
-(define (dead? aw)
-  (or (hit? (world-jogador aw) (world-carros aw))
-      (sink? (world-jogador aw) (world-troncos aw) (world-tartarugas aw))
-      (out? (world-jogador aw))
-      (<= (info-score (world-info aw)) 0)))
+(check-expect (morto? MUNDO0) #false)
+(define (morto? aw)
+  (or (hit? (mundo-jogador aw) (mundo-carros aw))
+      (sink? (mundo-jogador aw) (mundo-troncos aw) (mundo-tartarugas aw))
+      (out? (mundo-jogador aw))
+      (<= (info-score (mundo-info aw)) 0)))
 
 ;; hit?: jogador [List-of carro] -> Boolean
 ;; is the jogador hit by any carro?
@@ -609,9 +609,9 @@
 
 ;; sink?: jogador [List-of tronco] [List-of tartaruga] -> Boolean
 ;; is the jogador sink in the river?
-(check-expect (sink? (make-jogador 10 28 "up") lotr1 ldt1) #true)
-(check-expect (sink? (make-jogador 20 23 "up") lotr1 ldt1) #true)
-(check-expect (sink? (make-jogador 20 28 "up") lotr1 ldt1) #false)
+(check-expect (sink? (make-jogador 10 28 "up") ldtr1 ldt1) #true)
+(check-expect (sink? (make-jogador 20 23 "up") ldtr1 ldt1) #true)
+(check-expect (sink? (make-jogador 20 28 "up") ldtr1 ldt1) #false)
 (define (sink? ap alop alot)
   (and (in-river? ap)
        (not (on-any-p? ap alop))
@@ -638,19 +638,19 @@
 (define (win? ap)
   (<= (jogador-y ap) (+ (/ F-TAMANHO 2) 1)))
 
-;; show-end: World -> Image
+;; show-end: mundo -> Image
 ;; show the game-over image
-(check-expect (show-end (make-world (make-jogador 40 3 "up")
-                                    ldc1 lotr1 ldt1 (make-info 300 2)))
+(check-expect (show-end (make-mundo (make-jogador 40 3 "up")
+                                    ldc1 ldtr1 ldt1 (make-info 300 2)))
               (place-image (text "Score: 300" 40 'green) 370 400 WIN))
-(check-expect (show-end (make-world jogador0 ldc1 lotr1 ldt1 (make-info 0 1)))
+(check-expect (show-end (make-mundo jogador0 ldc1 ldtr1 ldt1 (make-info 0 1)))
               GAME-OVER)
 (define (show-end aw)
-  (cond [(win? (world-jogador aw))
+  (cond [(win? (mundo-jogador aw))
          (place-image (text
                        (string-append "Score: "
                                       (number->string
-                                       (info-score (world-info aw))))
+                                       (info-score (mundo-info aw))))
                        40 'green) 370 400 WIN)]
         [else GAME-OVER]))
 
@@ -659,11 +659,11 @@
 ;;;; ---------------------------------------------------------------------------
 ;;;; LAUNCH THE GAME
 
-;;; World -> World
+;;; mundo -> mundo
 ;; launch the game
 (big-bang MUNDO0
-          [to-draw draw-all]
+          [to-draw apresenta-tudo]
           [on-tick move-all (/ 1 DIFICULDADE)]
-          [on-key move-world-jogador]
+          [on-key move-mundo-jogador]
           [stop-when end? show-end])
 
