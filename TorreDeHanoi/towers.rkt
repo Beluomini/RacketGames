@@ -129,7 +129,7 @@
 ;   #f for no disk in limbo
 ;   positive? for disk in limbo
 ; towers: list[tower]
-(define-struct game-state [limbo towers])
+(define-struct game-state [score limbo towers])
 (define (make-towers-game widest-disk)
   (define num-towers 3)
   (define initial-tower (make-tower-with-bottom-disk widest-disk))
@@ -144,10 +144,12 @@
                        (make-pen "blue" 15 "solid" "butt" "round")))
   
   (define no-disk #f)
+  (define score0 1)
   (define initial-state
     (make-state
       #t
       (make-game-state
+        score0
         no-disk
         (cons initial-tower
               (make-list (sub1 num-towers) null)))))
@@ -166,6 +168,7 @@
                             (image-height game-image)))))
   (define (on-key state key)
     (let* [(pub (state-public state))
+           (score (game-state-score pub))
            (towers (game-state-towers pub))
            (limbo (game-state-limbo pub))
            (validate-index (lambda (index)
@@ -182,6 +185,7 @@
                (set-state-public
                  state
                  (make-game-state
+                    score
                    (get-from-towers towers index)
                    (remove-from-towers towers index)))]
               [(string=? key "s")
@@ -192,14 +196,20 @@
                (set-state-private state #f)]
               [else state])
         ; limbo disk.
-        (cond [(valid-index? index)
+        (cond [(and ( = (- (/ height 20) 1) (tower-height (list-ref towers index)) ) (= index 2) )
+                (println (~a "score: " score))
+                (set-state-private state #f)
+              ]
+              [(valid-index? index)
                (if (tower-can-add? (list-ref towers index) limbo)
                  (set-state-public 
                    state
                    (make-game-state 
+                    (+ score 1)
                      no-disk
                      (add-to-towers towers index limbo)))
-                 state)]
+                 state)
+              ]
               [else state]))))
   (define stop-when (compose1 (curry eq? #f) state-private))
   ; This component is not intended to lead into anything else.

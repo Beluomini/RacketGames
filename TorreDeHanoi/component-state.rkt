@@ -7,7 +7,7 @@
 ; each of these can change from component to component. Public state
 ; is intended to be consumed by some other component. Private state is
 ; not. It's where most control logic information will be kept.
-(define-struct state [private public])
+(define-struct state [private public] #:transparent)
 (define (set-state-private state value)
   (make-state value (state-public state)))
 (define (set-state-public state value)
