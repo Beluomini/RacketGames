@@ -3,17 +3,17 @@
 (require 2htdp/image)
 (require 2htdp/universe)
 
-(require "menu.rkt")
-(require "towers.rkt")
+(require "menu.rkt") ;chamando/requerindo arquivo para poder utilizazr as funções dele
+(require "towers.rkt") 
 (require "component-state.rkt")
+
 
 (define (compose-components name . components)
   (lambda (initializer)
     (define screen-width 1000)
     (define screen-height 500)
-    ; base-scene is a quick hack to deal with big-bang not resizing
-    ; it's output images. All images of big-bang are placed within a
-    ; scene that is the same size as the first picture big-bang shows.
+    ; base-scene é usado para redimensionar rapidamente imagens mal utilizadas pelo big-bang.
+    ; Sendo assim, as imagens do big-bang são trazidas para uma cena de forma redimensionada e mostradas na tela.
     (define base-scene (empty-scene screen-width screen-height))
     (define (get-current-game state)
       (control-state-component (state-private state)))

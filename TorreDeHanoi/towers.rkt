@@ -1,28 +1,20 @@
 #lang racket
-; make-towers-game is a component.
-; initializer: number?
-; The initializer specifies the width of the widest (bottom-most) disk
-; on the tower, which is also the height of the tower. The component
-; implements the game "Towers of Hanoi".
+; torre é um componente.
+; o arquivo torres é onde ficam as nossas principais funções do jogo, responsável por definir o tamanho dos discos e da torre
+; "desenhar" as imagens, fazer o topo e final da lista que no caso é a torre.
 
 (provide
-  ;draw-disk
-  ;tower-height tower-top tower-remove-top
-  ;tower-empty? tower-non-empty? tower-can-add?
-  ;tower-add
-  ;draw-tower draw-towers
   make-towers-game)
 (require 2htdp/image)
 (require 2htdp/universe)
 (require "component-state.rkt")
 
 ; TODO
-; - Allow someone to change the disk size and height.
-; - Create a pause menu.
-; - Create animations.
+; - Permite que sejam feitas mudanças no tamanho dos discos e torres.
+; - Cria um menu de pause.
+; - Além dos desenhos, as animações são feitas aqui.
 
-(define disk-height 20)
-; A disk is a positive number.
+(define disk-height 20) ; O disco é um número positivo
 (define (draw-disk disk)
   (overlay (text (number->string disk) (sub1 disk-height) 'white)
            (rectangle (+ 10 (* disk 30)) disk-height 'solid 'black)))
@@ -34,28 +26,25 @@
   (draw-disk 10)
   (draw-disk 20))
 
-; A tower is a list of numbers of strictly decreasing size.
-; The first element (car tower) is the largest number, and (cdr tower)
-; is, itself, a tower.
-(define tower-height length)
+
+(define tower-height length) ; A torre é uma lista decrescente, por conta dos menores números ficarem por cima,
+                             ;sendo assim o primeiro elemento da lista é o maior número que é a base
 (define tower-top last)
 (define (tower-remove-top tower)
-  (take tower (sub1 (length tower))))
-; See the value of the largest disk of the tower.
+  (take tower (sub1 (length tower)))); Pega o maior valor do maior disco da torre
+
 (define tower-bottom car)
-(define tower-remove-bottom cdr)
-; Place a disk on top of (at the end of) a tower.
+(define tower-remove-bottom cdr) ; Coloca um disco no topo da torre
 (define (tower-add tower disk)
   (append tower (list disk)))
 (define tower-empty? null?)
 (define tower-non-empty? pair?)
-(define (tower-can-add? tower disk)
+(define (tower-can-add? tower disk) 
   (or (tower-empty? tower) (< disk (tower-top tower))))
 (define (make-tower-with-bottom-disk disk)
   (reverse (cdr (build-list (+ disk 1) identity))))
 
-; tower? -> image?
-(define (draw-tower tower)
+(define (draw-tower tower) ;imagem das torres
   (if (tower-empty? tower)
     empty-image
     (above (draw-tower (tower-remove-bottom tower))
@@ -86,49 +75,41 @@
                 towers))]
     (horizontal-image-append (add-between tower-pics separator))))
 
-(define (replace-ref lst index value)
+(define (replace-ref lst index value); Como a torre é uma lista, pode ser lida como uma. Sendo assim, essa função
+                                     ; retorna uma lista de torres, ou seja uma lista de lista (como vimos em aula), as quais tiveram seu topo removido 
+                                     ; por meio dos índices que representam cada torre.
   (cond [(null? lst) lst]
         [(zero? index) (cons value (cdr lst))]
         [else (cons (car lst) 
                     (replace-ref (cdr lst) (sub1 index) value))]))
 
-; towers are a list[tower]. So towers? can be read as list[tower].
 
-; towers? nonnegative? -> towers?
-; Returns a list of towers with the top disk removed from (list-ref
-; towers index).
-(define (remove-from-towers towers index)
+(define (remove-from-towers towers index); Verifica se a torre tem índice negativo, se não for, essa torre pode ser adicionada na lista caso necessário.
+                                         ; Essa função
+                                         ; retorna uma lista de torres, ou seja uma lista de lista (como vimos em aula), as quais
+                                         ; um valor adicionado em seu topo, por meio dos índices que representam cada torre
   (replace-ref towers 
                index 
                (tower-remove-top (list-ref towers index))))
-; towers? nonnegative? -> towers?
-; Returns a list of towers with the given disk added to the top of
-; (list-ref towers index).
-(define (add-to-towers towers index disk)
+
+
+(define (add-to-towers towers index disk) ; Verifica se a torre tem índice negativo, se não tiver, o disco pode ser adicionado.
   (replace-ref towers 
                index 
-               (tower-add (list-ref towers index) disk)))
-; towers? nonnegative? -> disk?
-; Returns the disk at the top of (list-ref towers index).
+               (tower-add (list-ref towers index) disk))) ; Essa função retorna o valor do disco adicionado.
+
 (define (get-from-towers towers index)
   (tower-top (list-ref towers index)))
 
 
-; Game:
-; - There's three pegs (towers).
-; - Pressing a number should remove a disk from a peg, if the peg has
-;   a disk.
-;   - After this point, there should be a disk "in limbo". This disk
-;     is not on any peg.
-;   - After pressing another number, the "in limbo" disk should go on
-;     the peg specified by that number, if the disk can go on that
-;     peg.
 
 
-; limbo: (or/c boolean? positive?)
-;   #f for no disk in limbo
-;   positive? for disk in limbo
-; towers: list[tower]
+
+; limbo: (or/c boolean? positivo?)
+;   #f -> falso para limbo vazio de discos
+;   positivo? Se tiver disco no limbo
+;   torres : lista[torres] -> Já citado
+
 (define-struct game-state [score limbo towers])
 (define (make-towers-game widest-disk)
   (define num-towers 3)
@@ -179,7 +160,7 @@
              (lambda (i) (and (number? i) (< i num-towers))))
            (index (validate-index key))]
       (if (eq? limbo no-disk)
-        ; No limbo disk.
+        ; Sem discos no limbo, retorna falso.
         (cond [(and (valid-index? index)
                     (tower-non-empty? (list-ref towers index)))
                (set-state-public
@@ -195,7 +176,7 @@
               [(string=? key "q") 
                (set-state-private state #f)]
               [else state])
-        ; limbo disk.
+        ; Existe disco no limbo, retorna positivo.
         (cond [(and ( = (- (/ height 20) 1) (tower-height (list-ref towers index)) ) (= index 2) )
                 (println (~a "score: " score))
                 (set-state-private state #f)
@@ -212,7 +193,6 @@
               ]
               [else state]))))
   (define stop-when (compose1 (curry eq? #f) state-private))
-  ; This component is not intended to lead into anything else.
   (define (output state) #f)
   (lambda (dispatch)
     (case dispatch

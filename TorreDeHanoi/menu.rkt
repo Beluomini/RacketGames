@@ -1,18 +1,13 @@
 #lang racket
-; make-menu-game is a component.
-; initializer: (list string? list[string?] list[any/c])
-; - first member is menu title
-; - Second member is a list of keys which correspond to each value of
-;   the menu.
-; - third member is a list of values to be selected through the
-;   title.
-;
-; The menu will display the keys. The currently selected key will be
-; visually denoted by a small arrow to the left side of the key.
-; The final state of the menu is the value which corresponds to the
-; selected key. So, for instance, if `selection` is the final selected
-; index (ie the chosen key is (list-ref keys selection)), then the
-; final selected value is (list-ref vals selection)).
+
+;Menu feito como componente, montado como lista
+; - primeiro é o título
+; - segundo são as chaves lidos do usuário.
+; - terceiro é uma lista com os valores selecionados do titulo
+
+; O menu exibirá as teclas. A tecla atualmente selecionada será.
+; indicado visualmente por uma pequena seta no lado esquerdo da tecla.
+; O estado final do menu é o valor que corresponde a tecla selecionada.
 
 (provide make-menu-game)
 (require 2htdp/image)
@@ -20,7 +15,6 @@
 (require "component-state.rkt")
 
 (define rem 30)
-; number -> integer
 (define make-font-size round) 
 
 (define (draw-menu-item item)
@@ -29,7 +23,8 @@
 (module+ test
   (draw-menu-item "item"))
 
-; The small arrow which denotes selection.
+; Cursor é a seta ja mencionada para indicar onde está e qual tecla pode indicar.
+
 (define cursor
   (beside (rectangle (make-font-size (* 3/2 rem)) 
                      rem 'solid 'black)
@@ -55,7 +50,7 @@
   (draw-iter items empty-image selected-item))
 
 (define-struct menu [title items vals])
-; Takes in index of currently selected item, returns index of next
+; Pega o índice do item selecionado e retorna esse.
 ; item.
 (define (menu-next menu index)
   (modulo (add1 index) (length (menu-items menu))))
@@ -81,8 +76,9 @@
   (define (on-key state key)
     (let [(menu-entry (state-public state))]
       (case key
-        ; High parts of a menu are earlier in list
-        ; Low parts of a menu are later in list
+        ; O menu como dito é uma lista, como uma imagem de cima pra baixo,
+        ; então as partes mais acima estão no começo da lista
+        ; e as mais baixas mais pro final
         [("down" "j") 
          (set-state-public state (menu-next game-menu menu-entry))]
         [("up" "k")
