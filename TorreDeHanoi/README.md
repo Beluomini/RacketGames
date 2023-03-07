@@ -2,14 +2,14 @@
 -------------------------------------------------------
 
 ## Alunos:
-Lucas Beluomini 120111 \n
+Lucas Beluomini 120111 </br>
 Arthur Martins Maciel 120119
 
 ## Curso:
 Ciência da Computação (UEM)
 
 ## Diciplina: 
-Paradigmas de Programação Lógica e Funcional \n
+Paradigmas de Programação Lógica e Funcional  </br>
 1 Trabalho Prático
 
 -------------------------------------------------------
