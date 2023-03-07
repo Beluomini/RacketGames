@@ -1,14 +1,17 @@
 # RacketHanoiTower
 -------------------------------------------------------
-Alunos:
+
+## Alunos:
 Lucas Beluomini 120111
 Arthur Martins Maciel 120119
 
-Curso:
+## Curso:
 Ciência da Computação (UEM)
 
-Diciplina: Paradigmas de Programação Lógica e Funcional 
+## Diciplina: 
+Paradigmas de Programação Lógica e Funcional 
 1 Trabalho Prático
+
 -------------------------------------------------------
 ## Jogo do hanoi
 
