@@ -1,5 +1,15 @@
 # RacketHanoiTower
 -------------------------------------------------------
+Alunos:
+Lucas Beluomini 120111
+Arthur Martins Maciel 120119
+
+Curso:
+Ciência da Computação (UEM)
+
+Diciplina: Paradigmas de Programação Lógica e Funcional 
+1 Trabalho Prático
+-------------------------------------------------------
 ## Jogo do hanoi
 
 Para iniciar o jogo é preciso executar o arquivo hanoi.rkt
