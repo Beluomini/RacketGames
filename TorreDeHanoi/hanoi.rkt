@@ -1,5 +1,16 @@
 #lang racket
 
+; Alunos:
+; Lucas Beluomini 120111
+; Arthur Martins Maciel 120119
+
+; Curso:
+; Ciência da Computação (UEM)
+
+; Diciplina:
+; Paradigmas de Programação Lógica e Funcional
+; 1 Trabalho Prático
+
 (require 2htdp/image)
 (require 2htdp/universe)
 
